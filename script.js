@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 function displayQuestion() {
     const questionData = quiz.getCurrentQuestion();
     if (!questionData) {
-        document.getElementById("quiz-container").innerHTML = `<h2>Quiz Over! Your score is: ${user.score}</h2>`;
+        document.getElementById("quiz-container").innerHTML = `<h2>The Quiz is Over! Your score is: ${user.score}</h2>`;
         return;
     }
     
