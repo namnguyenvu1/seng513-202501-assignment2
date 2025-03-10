@@ -1,6 +1,6 @@
 import { questionGenerator } from './generator.js';
 
-// To fix the &quot; problem
+// To fix the &quot; problem by create text area and set text inside
 function decodeHtmlEntities(text) {
     const txt = document.createElement("textarea");
     txt.innerHTML = text;

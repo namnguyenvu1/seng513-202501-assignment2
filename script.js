@@ -22,7 +22,8 @@ function showLoginForm() {
         <div id="score-history"></div>
     `;
 
-    document.getElementById("start-quiz").addEventListener("click", handleLogin);
+    // document.getElementById("start-quiz").addEventListener("click", handleLogin);
+    document.getElementById("start-quiz").addEventListener("click", handleLogin.bind(this));
     updateScoreHistory();
 }
 
@@ -164,6 +165,15 @@ function updateScoreHistory() {
     history.innerHTML = "<h3>Leaderboard</h3>" + 
         sortedUsers.map(user => `<p>${user.name}: ${user.score}</p>`).join("");
 }
+// function updateScoreHistory() {
+//     const history = document.getElementById("score-history");
+//     const sortedUsers = [...users].sort((a, b) => b.score - a.score);
+    
+//     history.innerHTML = "<h3>Leaderboard</h3>" + 
+//         sortedUsers.map(function(user) {
+//             return `<p>${user.name}: ${user.score}</p>`;
+//         }).join("").call(this);
+// }
 
 function endQuiz() {
     document.getElementById("quiz-container").innerHTML = `
