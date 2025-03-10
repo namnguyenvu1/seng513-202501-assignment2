@@ -16,4 +16,38 @@ button {
     padding: 10px;
     margin-top: 10px;
     cursor: pointer;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.option-button {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: white;
+}
+
+.option-button.selected {
+    background: #007bff;
+    color: white;
+}
+
+.option-button.correct {
+    background: #28a745;
+    color: white;
+}
+
+.option-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+#score-history {
+    margin-top: 20px;
+    padding: 10px;
+    border-top: 1px solid #ccc;
 }
