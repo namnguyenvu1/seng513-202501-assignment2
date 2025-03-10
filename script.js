@@ -23,7 +23,7 @@ function showLoginForm() {
     `;
 
     // document.getElementById("start-quiz").addEventListener("click", handleLogin);
-    document.getElementById("start-quiz").addEventListener("click", handleLogin.bind(this));
+    document.getElementById("start-quiz").addEventListener("click", handleLogin.bind(this)); // bind ensure when we call handleLogin, it can look at the right context, in this case the showLoginForm func
     updateScoreHistory();
 }
 
