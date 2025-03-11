@@ -38,50 +38,41 @@ async function handleLogin() {
             document.getElementById("error-message").textContent = "Please enter a username!";
             return;
         }
-        
-        // I commented this because I want a player to be able to play multiple times
-        // if (users.some(u => u.name === username)) {
-        //     document.getElementById("error-message").textContent = "Username already exists!";
-        //     return;
-        // }
 
         currentUser = new User(username);
         users.push(currentUser);
-        
-        // Show loading state
+
         document.getElementById("start-quiz").disabled = true;
         document.getElementById("start-quiz").textContent = "Loading questions...";
-        
-        // // OG way: Fetch both easy and hard questions. this is prone to error because we fetch both questions at once
-        // const [easyQuestions, hardQuestions] = await Promise.all([
-        //     fetchQuestions('easy'),
-        //     fetchQuestions('hard')
-        // ]);
 
-        // Fix: Fetch questions sequentially with a delay
-        let easyQuestions = [];
-        let hardQuestions = [];
+        let easyQuestions = [], mediumQuestions = [], hardQuestions = [];
+        let allQuestions = [];
 
         try {
-            easyQuestions = await fetchQuestions('easy');
-            await wait(5); // 5 second delay
-            hardQuestions = await fetchQuestions('hard');
+            allQuestions = await fetchQuestions();
+
+            easyQuestions = allQuestions.filter(q => q.difficulty === 'easy').slice(0, 5);
+            mediumQuestions = allQuestions.filter(q => q.difficulty === 'medium').slice(0, 5);
+            hardQuestions = allQuestions.filter(q => q.difficulty === 'hard').slice(0, 5);
+
+            console.log("Easy Questions: ", easyQuestions.length);
+            console.log("Medium Questions: ", mediumQuestions.length);
+            console.log("Hard Questions: ", hardQuestions.length);
         } catch (error) {
             console.error("Error fetching questions:", error);
         }
-        console.log(easyQuestions)
-        console.log(hardQuestions)
-        
-        quiz = new Quiz(easyQuestions, hardQuestions);
+
+        quiz = new Quiz(easyQuestions, mediumQuestions, hardQuestions);
         showQuiz();
         displayQuestion();
     } catch (error) {
-        console.error("Detailed error:", error); // See the specific error
+        console.error("Detailed error:", error);
         document.getElementById("error-message").textContent = "Error loading questions. Please try again.";
         document.getElementById("start-quiz").disabled = false;
         document.getElementById("start-quiz").textContent = "Start Quiz";
     }
 }
+
 
 function showQuiz() {
     document.getElementById("quiz-container").innerHTML = `
