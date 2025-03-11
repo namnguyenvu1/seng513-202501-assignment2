@@ -46,17 +46,22 @@ async function handleLogin() {
         document.getElementById("start-quiz").textContent = "Loading questions...";
 
         let easyQuestions = [], mediumQuestions = [], hardQuestions = [];
+        let allQuestions = [];
 
         try {
-            easyQuestions = await fetchQuestions('easy');
-            await wait(5);
-            mediumQuestions = await fetchQuestions('medium');
-            await wait(5);
-            hardQuestions = await fetchQuestions('hard');
+            allQuestions = await fetchQuestions();
+
+            easyQuestions = allQuestions.filter(q => q.difficulty === 'easy').slice(0, 5);
+            mediumQuestions = allQuestions.filter(q => q.difficulty === 'medium').slice(0, 5);
+            hardQuestions = allQuestions.filter(q => q.difficulty === 'hard').slice(0, 5);
+
+            console.log("Easy Questions: ", easyQuestions.length);
+            console.log("Medium Questions: ", mediumQuestions.length);
+            console.log("Hard Questions: ", hardQuestions.length);
         } catch (error) {
             console.error("Error fetching questions:", error);
         }
-        
+
         quiz = new Quiz(easyQuestions, mediumQuestions, hardQuestions);
         showQuiz();
         displayQuestion();

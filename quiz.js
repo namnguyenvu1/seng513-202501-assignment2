@@ -17,6 +17,11 @@ export class Quiz {
         this.easyIterator = questionGenerator(this.easyQuestions);
         this.mediumIterator = questionGenerator(this.mediumQuestions);
         this.hardIterator = questionGenerator(this.hardQuestions);
+        // this.questionIterator = questionGenerator([...this.easyQuestions, ...this.easyQuestions, ...this.hardQuestions]);
+
+        // Question count limit
+        this.questionCount = 1;
+        this.maxQuestions = 5;
 
         // Start with an easy question
         this.currentQuestion = this.easyIterator.next().value;
@@ -49,7 +54,7 @@ export class Quiz {
             this.currentDifficulty = 'easy';
         }
 
-        return this.nextQuestion(), isCorrect;
+        return isCorrect;
     }
 
     getCurrentQuestion() {
@@ -57,8 +62,16 @@ export class Quiz {
     }
 
     nextQuestion() {
+        console.log(this.questionCount);
+        // End the quiz after the max number of questions
+        if (this.questionCount >= this.maxQuestions) {
+            console.log('Quiz completed!');
+            this.currentQuestion = null;
+            return false;
+        }
+
         let next;
-        
+
         // Pick the next question based on difficulty
         if (this.currentDifficulty === 'easy') {
             next = this.easyIterator.next();
@@ -68,8 +81,16 @@ export class Quiz {
             next = this.hardIterator.next();
         }
 
-        // If no more questions are left, return null
+        // // Debugging information
+        // console.log(`Current Difficulty: ${this.currentDifficulty}`);
+        // console.log(`Next Question Done: ${next.done}`);
+
+        // If no more questions are left or max questions reached, return null
         this.currentQuestion = next.done ? null : next.value;
+
+        // Increment the question counter
+        this.questionCount++;
+
         return !next.done;
     }
 }
