@@ -1,6 +1,5 @@
 import { questionGenerator } from './generator.js';
 
-// To fix the &quot; problem by create text area and set text inside
 function decodeHtmlEntities(text) {
     const txt = document.createElement("textarea");
     txt.innerHTML = text;
@@ -8,16 +7,19 @@ function decodeHtmlEntities(text) {
 }
 
 export class Quiz {
-    constructor(easyQuestions, hardQuestions) {
+    constructor(easyQuestions, mediumQuestions, hardQuestions) {
         this.easyQuestions = this.formatQuestions(easyQuestions);
+        this.mediumQuestions = this.formatQuestions(mediumQuestions);
         this.hardQuestions = this.formatQuestions(hardQuestions);
         this.currentDifficulty = 'easy';
 
-        // Create generator instance for questions
-        this.questionIterator = questionGenerator([...this.easyQuestions, ...this.hardQuestions]);
+        // Create separate generators for each difficulty
+        this.easyIterator = questionGenerator(this.easyQuestions);
+        this.mediumIterator = questionGenerator(this.mediumQuestions);
+        this.hardIterator = questionGenerator(this.hardQuestions);
 
-        // Get the first question
-        this.currentQuestion = this.questionIterator.next().value;
+        // Start with an easy question
+        this.currentQuestion = this.easyIterator.next().value;
     }
 
     formatQuestions(questions) {
@@ -33,10 +35,17 @@ export class Quiz {
 
     checkAnswer(answer, user) {
         const isCorrect = answer === this.currentQuestion.correct;
+
         if (isCorrect) {
             user.updateScore();
-            this.currentDifficulty = 'hard';
+            // Increase difficulty
+            if (this.currentDifficulty === 'easy') {
+                this.currentDifficulty = 'medium';
+            } else if (this.currentDifficulty === 'medium') {
+                this.currentDifficulty = 'hard';
+            }
         } else {
+            // Always go back to easy on wrong answer
             this.currentDifficulty = 'easy';
         }
 
@@ -48,7 +57,18 @@ export class Quiz {
     }
 
     nextQuestion() {
-        const next = this.questionIterator.next();
+        let next;
+        
+        // Pick the next question based on difficulty
+        if (this.currentDifficulty === 'easy') {
+            next = this.easyIterator.next();
+        } else if (this.currentDifficulty === 'medium') {
+            next = this.mediumIterator.next();
+        } else if (this.currentDifficulty === 'hard') {
+            next = this.hardIterator.next();
+        }
+
+        // If no more questions are left, return null
         this.currentQuestion = next.done ? null : next.value;
         return !next.done;
     }
