@@ -50,8 +50,14 @@ export class Quiz {
                 this.currentDifficulty = 'hard';
             }
         } else {
-            // Always go back to easy on wrong answer
-            this.currentDifficulty = 'easy';
+            // // Always go back to easy on wrong answer
+            // this.currentDifficulty = 'easy';
+            // Decrease difficulties
+            if (this.currentDifficulty === 'hard') {
+                this.currentDifficulty = 'medium';
+            } else if (this.currentDifficulty === 'medium') {
+                this.currentDifficulty = 'easy';
+            }
         }
 
         return isCorrect;
