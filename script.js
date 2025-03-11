@@ -147,7 +147,15 @@ function handleSubmit() {
 
     document.getElementById("submit-button").style.display = "none";
     document.getElementById("next-button").style.display = "block";
+    updateScoreDisplay()
     updateScoreHistory();
+}
+
+function updateScoreDisplay() {
+    document.getElementById("score-display").innerHTML = `
+        <p>Current Player: ${currentUser.name}</p>
+        <p>Score: ${currentUser.score}</p>
+    `;
 }
 
 function handleNext() {
