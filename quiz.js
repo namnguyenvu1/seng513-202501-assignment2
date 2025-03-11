@@ -63,6 +63,8 @@ export class Quiz {
 
     nextQuestion() {
         console.log(this.questionCount);
+        // console.log(this.currentDifficulty);
+        console.log(`This Question Difficulty: ${this.currentDifficulty}`);
         // End the quiz after the max number of questions
         if (this.questionCount >= this.maxQuestions) {
             console.log('Quiz completed!');
@@ -84,6 +86,9 @@ export class Quiz {
         // // Debugging information
         // console.log(`Current Difficulty: ${this.currentDifficulty}`);
         // console.log(`Next Question Done: ${next.done}`);
+
+        // Print the difficulty of the next question
+        console.log(`Next Question Difficulty: ${this.currentDifficulty}`);
 
         // If no more questions are left or max questions reached, return null
         this.currentQuestion = next.done ? null : next.value;

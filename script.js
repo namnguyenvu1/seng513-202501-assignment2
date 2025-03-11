@@ -14,7 +14,8 @@ document.addEventListener("DOMContentLoaded", () => {
 function showLoginForm() {
     const container = document.getElementById("quiz-container");
     container.innerHTML = `
-        <h2>Enter Your Name</h2>
+        <h2>Welcome to Open Trivia Database</h2>
+        <h2>Please Enter Your Name</h2>
         <input type="text" id="username" placeholder="Username">
         <button id="start-quiz">Start Quiz</button>
         <div id="error-message" style="color: red;"></div>
@@ -76,7 +77,7 @@ async function handleLogin() {
 
 function showQuiz() {
     document.getElementById("quiz-container").innerHTML = `
-        <h1>Quiz</h1>
+        <h1>Question ${quiz.questionCount}</h1>
         <p id="question-text"></p>
         <div id="options"></div>
         <button id="submit-button">Submit</button>
@@ -100,6 +101,9 @@ function displayQuestion() {
         endQuiz();
         return;
     }
+
+    // Update the question number in the heading
+    document.querySelector('h1').textContent = `Question ${quiz.questionCount}`;
     
     document.getElementById("question-text").textContent = questionData.text;
     const optionsContainer = document.getElementById("options");
