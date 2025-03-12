@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function showLoginForm() {
     const container = document.getElementById("quiz-container");
     container.innerHTML = `
+        <h1>Quiz</h1>
         <h2>Enter Your Name</h2>
         <input type="text" id="username" placeholder="Username">
         <button id="start-quiz">Start Quiz</button>
@@ -85,17 +86,25 @@ async function handleLogin() {
 
 function showQuiz() {
     document.getElementById("quiz-container").innerHTML = `
-        <h1>Quiz</h1>
-        <p id="question-text"></p>
-        <div id="options"></div>
-        <button id="submit-button">Submit</button>
-        <button id="next-button" style="display: none;">Next</button>
-        <p id="result"></p>
+         <div id="question-container">
+            <h1 id="quiz-title">Question ${quiz.questionCount}</h1>
+            <p id="question-text"></p>
+        </div>
+
+        <div id="options-container">
+            <div id="options"></div>
+            <button id="submit-button">Submit</button>
+            <button id="next-button" style="display:none;">Next</button>
+        </div>
+
         <div id="score-display">
             <p>Current Player: ${currentUser.name}</p>
             <p>Score: ${currentUser.score}</p>
         </div>
-        <div id="score-history"></div>
+
+        <div id="leaderboard-container">
+            <div id="score-history"></div>
+        </div>
     `;
 
     document.getElementById("submit-button").addEventListener("click", handleSubmit);
@@ -113,6 +122,8 @@ function displayQuestion() {
     document.getElementById("question-text").textContent = questionData.text;
     const optionsContainer = document.getElementById("options");
     optionsContainer.innerHTML = "";
+
+    
     
     questionData.choices.forEach((choice) => {
         const btn = document.createElement("button");
@@ -160,6 +171,9 @@ function updateScoreDisplay() {
 
 function handleNext() {
     quiz.nextQuestion();
+    if (quiz.getCurrentQuestion()) {
+        document.getElementById("quiz-title").textContent = `Question ${quiz.questionCount}`;
+    }
     document.getElementById("submit-button").style.display = "block";
     document.getElementById("next-button").style.display = "none";
     currentUser.selectedAnswer = null;
