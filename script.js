@@ -77,17 +77,25 @@ async function handleLogin() {
 
 function showQuiz() {
     document.getElementById("quiz-container").innerHTML = `
-        <h1>Question ${quiz.questionCount}</h1>
-        <p id="question-text"></p>
-        <div id="options"></div>
-        <button id="submit-button">Submit</button>
-        <button id="next-button" style="display: none;">Next</button>
-        <p id="result"></p>
+         <div id="question-container">
+            <h1 id="quiz-title">Question ${quiz.questionCount}</h1>
+            <p id="question-text"></p>
+        </div>
+
+        <div id="options-container">
+            <div id="options"></div>
+            <button id="submit-button">Submit</button>
+            <button id="next-button" style="display:none;">Next</button>
+        </div>
+
         <div id="score-display">
             <p>Current Player: ${currentUser.name}</p>
             <p>Score: ${currentUser.score}</p>
         </div>
-        <div id="score-history"></div>
+
+        <div id="leaderboard-container">
+            <div id="score-history"></div>
+        </div>
     `;
 
     document.getElementById("submit-button").addEventListener("click", handleSubmit);
