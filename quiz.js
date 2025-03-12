@@ -1,6 +1,5 @@
 import { questionGenerator } from './generator.js';
 
-// To fix the &quot; problem by create text area and set text inside
 function decodeHtmlEntities(text) {
     const txt = document.createElement("textarea");
     txt.innerHTML = text;
@@ -8,16 +7,24 @@ function decodeHtmlEntities(text) {
 }
 
 export class Quiz {
-    constructor(easyQuestions, hardQuestions) {
+    constructor(easyQuestions, mediumQuestions, hardQuestions) {
         this.easyQuestions = this.formatQuestions(easyQuestions);
+        this.mediumQuestions = this.formatQuestions(mediumQuestions);
         this.hardQuestions = this.formatQuestions(hardQuestions);
         this.currentDifficulty = 'easy';
 
-        // Create generator instance for questions
-        this.questionIterator = questionGenerator([...this.easyQuestions, ...this.hardQuestions]);
+        // Create separate generators for each difficulty
+        this.easyIterator = questionGenerator(this.easyQuestions);
+        this.mediumIterator = questionGenerator(this.mediumQuestions);
+        this.hardIterator = questionGenerator(this.hardQuestions);
+        // this.questionIterator = questionGenerator([...this.easyQuestions, ...this.easyQuestions, ...this.hardQuestions]);
 
-        // Get the first question
-        this.currentQuestion = this.questionIterator.next().value;
+        // Question count limit
+        this.questionCount = 1;
+        this.maxQuestions = 5;
+
+        // Start with an easy question
+        this.currentQuestion = this.easyIterator.next().value;
     }
 
     formatQuestions(questions) {
@@ -33,14 +40,27 @@ export class Quiz {
 
     checkAnswer(answer, user) {
         const isCorrect = answer === this.currentQuestion.correct;
+
         if (isCorrect) {
             user.updateScore();
-            this.currentDifficulty = 'hard';
+            // Increase difficulty
+            if (this.currentDifficulty === 'easy') {
+                this.currentDifficulty = 'medium';
+            } else if (this.currentDifficulty === 'medium') {
+                this.currentDifficulty = 'hard';
+            }
         } else {
-            this.currentDifficulty = 'easy';
+            // // Always go back to easy on wrong answer
+            // this.currentDifficulty = 'easy';
+            // Decrease difficulties
+            if (this.currentDifficulty === 'hard') {
+                this.currentDifficulty = 'medium';
+            } else if (this.currentDifficulty === 'medium') {
+                this.currentDifficulty = 'easy';
+            }
         }
 
-        return this.nextQuestion(), isCorrect;
+        return isCorrect;
     }
 
     getCurrentQuestion() {
@@ -48,8 +68,40 @@ export class Quiz {
     }
 
     nextQuestion() {
-        const next = this.questionIterator.next();
+        console.log(this.questionCount);
+        // console.log(this.currentDifficulty);
+        console.log(`This Question Difficulty: ${this.currentDifficulty}`);
+        // End the quiz after the max number of questions
+        if (this.questionCount >= this.maxQuestions) {
+            console.log('Quiz completed!');
+            this.currentQuestion = null;
+            return false;
+        }
+
+        let next;
+
+        // Pick the next question based on difficulty
+        if (this.currentDifficulty === 'easy') {
+            next = this.easyIterator.next();
+        } else if (this.currentDifficulty === 'medium') {
+            next = this.mediumIterator.next();
+        } else if (this.currentDifficulty === 'hard') {
+            next = this.hardIterator.next();
+        }
+
+        // // Debugging information
+        // console.log(`Current Difficulty: ${this.currentDifficulty}`);
+        // console.log(`Next Question Done: ${next.done}`);
+
+        // Print the difficulty of the next question
+        console.log(`Next Question Difficulty: ${this.currentDifficulty}`);
+
+        // If no more questions are left or max questions reached, return null
         this.currentQuestion = next.done ? null : next.value;
+
+        // Increment the question counter
+        this.questionCount++;
+
         return !next.done;
     }
 }
