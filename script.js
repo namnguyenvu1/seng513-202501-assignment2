@@ -125,7 +125,7 @@ function displayQuestion() {
             document.querySelectorAll('.option-button').forEach(b => b.classList.remove('selected'));
             btn.classList.add('selected');
             currentUser.selectedAnswer = choice;
-        };
+        }.bind(this);   //This ensures this inside the onclick handler refers to the correct object.
         optionsContainer.appendChild(btn);
     });
 }
@@ -180,6 +180,7 @@ function updateScoreHistory() {
     const sortedUsers = [...users].sort((a, b) => b.score - a.score);
     history.innerHTML = "<h3>Leaderboard</h3>" + 
         sortedUsers.map(user => `<p>${user.name}: ${user.score}</p>`).join("");
+    
 }
 // function updateScoreHistory() {
 //     const history = document.getElementById("score-history");
